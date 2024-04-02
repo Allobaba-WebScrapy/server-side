@@ -134,6 +134,7 @@ def index():
     return "Hello World!"
 scraper = None
 @app.route('/setup', methods=['POST'])
+@app.route('/orange/setup', methods=['POST'])
 def setup():
     global scraper
     data = request.get_json()

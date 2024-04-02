@@ -132,7 +132,7 @@ class Scraper:
 @app.route('/')
 def index():
     return "Hello World!"
-scraper = None
+scraperDate = []
 @app.route('/setup', methods=['POST'])
 @app.route('/orange/setup', methods=['POST'])
 def setup():
@@ -142,7 +142,7 @@ def setup():
     type = data['type']
     start_pages = int(data['start_pages'])
     limit_pages = int(data['limit_pages'])
-    scraper = Scraper(activites_name,type,start_pages,limit_pages)
+    scraper = [activites_name,type,start_pages,limit_pages]
     return jsonify("ok")
 
 
@@ -154,7 +154,7 @@ def scrape():
         yield f"data: {json.dumps({'type': 'progress', 'message': 'Scraping Starting...'})}\n\n"
         # scraper = Scraper("Fleuristes","B2C",1,1)
 
-        for result in scraper.scrape_activites():
+        for result in Scraper(scraperDate[0],scraperDate[1],scraperDate[2],scraperDate[3]).scrape_activites():
             if(result["type"]=="response"):
                 results.append(result)
             yield f"data: {json.dumps(result)}\n\n"

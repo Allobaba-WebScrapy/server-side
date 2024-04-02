@@ -132,7 +132,7 @@ class Scraper:
 @app.route('/')
 def index():
     return "Hello World!"
-
+scraper = None
 @app.route('/setup', methods=['POST'])
 def setup():
     global scraper

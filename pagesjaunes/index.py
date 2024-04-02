@@ -10,6 +10,7 @@ CORS(app)
 scraper = PageJaunesScraper()
 
 
+@app.route("/pagesjaunes", methods=["GET"])
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({"Flask": "Welcome to the PageJaunes Scraper API!"})
@@ -24,6 +25,7 @@ def setup():
     return jsonify({"status": "Setup complete"})
 
 
+@app.route("/pagesjaunes/stream")
 @app.route("/stream")
 def stream():
     def event_stream():

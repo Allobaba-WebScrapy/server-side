@@ -128,6 +128,7 @@ class Scraper:
 # Usage:
 
 
+@app.route('/orange')
 @app.route('/')
 def index():
     return "Hello World!"
@@ -144,6 +145,7 @@ def setup():
     return jsonify("ok")
 
 
+@app.route('/orange/scrape')
 @app.route('/scrape')
 def scrape():
     def generate():

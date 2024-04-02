@@ -7,6 +7,7 @@ import json
 from get_card_link import link
 
 app = Flask(__name__)
+
 CORS(app)
 
 class Scraper:
@@ -132,17 +133,20 @@ class Scraper:
 @app.route('/')
 def index():
     return "Hello World!"
-scraperDate = []
+
+scraperData = []
+
 @app.route('/setup', methods=['POST'])
 @app.route('/orange/setup', methods=['POST'])
 def setup():
-    global scraper
+    global scraperData
+    print("request data got successfully")
     data = request.get_json()
     activites_name = data['activites_name']
     type = data['type']
     start_pages = int(data['start_pages'])
     limit_pages = int(data['limit_pages'])
-    scraper = [activites_name,type,start_pages,limit_pages]
+    scraperData = [activites_name,type,start_pages,limit_pages]
     return jsonify("ok")
 
 
@@ -154,7 +158,7 @@ def scrape():
         yield f"data: {json.dumps({'type': 'progress', 'message': 'Scraping Starting...'})}\n\n"
         # scraper = Scraper("Fleuristes","B2C",1,1)
 
-        for result in Scraper(scraperDate[0],scraperDate[1],scraperDate[2],scraperDate[3]).scrape_activites():
+        for result in Scraper(scraperData[0],scraperData[1],scraperData[2],scraperData[3]).scrape_activites():
             if(result["type"]=="response"):
                 results.append(result)
             yield f"data: {json.dumps(result)}\n\n"

@@ -1,0 +1,59 @@
+server {
+    # Listen to port 443 on both IPv4 and IPv6.
+    listen 443 ssl default_server reuseport;
+    listen [::]:443 ssl default_server reuseport;
+
+    # using ip address IPv4 64.23.229.206 for vps instead of a custom domain name.
+    server_name 64.23.229.206;
+
+
+    # Enable ssl certificate for the whole VPS server.
+    # Load the certificate files.
+    ssl_certificate         /etc/letsencrypt/live/test-name/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/test-name/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/test-name/chain.pem;
+
+    # Load the Diffie-Hellman parameter.
+    ssl_dhparam /etc/letsencrypt/dhparams/dhparam.pem;
+
+    # Enable the SSL session cache.
+    ssl_session_cache shared:SSL:1m;
+
+    return 200 "Scrapy VPS is running on HTTPS. and SSL certificate is working."
+    add_header Content-Type text/plain;
+
+}
+# Notes:
+# note 1: simple notes
+# 1. The server_name directive should be set to the domain name of your website.
+# 2. The ssl_certificate directive should be set to the fullchain.pem file.
+# 3. The ssl_certificate_key directive should be set to the privkey.pem file.
+# 4. The ssl_trusted_certificate directive should be set to the chain.pem file.
+# 5. The ssl_dhparam directive should be set to the dhparam.pem file.
+# 6. The return directive should be set to the message you want to return when the server is accessed.
+# 7. The add_header directive should be set to the Content-Type application/json header.
+# 8. The server block should be placed in the /etc/nginx/sites-available/default file.
+# 9. The server block should be placed in the /etc/nginx/sites-enabled/default file.
+# 10. The server block should be placed in the /etc/nginx/nginx.conf file.
+# 11. The server block should be placed in the /etc/nginx/conf.d/default.conf file.
+# 12. The server block should be placed in the /etc/nginx/conf.d/ssl.conf file.
+
+# note 2: Notes for server_name directive
+# 1. The server_name directive should be set to the domain name of your website.
+# 2. The server_name directive should be set to the IP address of your website.
+# 3. The server_name directive should be set to the hostname of your website.
+# 4. The server_name directive should be set to the subdomain of your website.
+# 5. The server_name directive should be set to the wildcard domain of your website.
+# 6. The server_name directive should be set to the domain name of your website with a port number.
+# 7. The server_name directive should be set to the domain name of your website with a path.
+# 8. The server_name directive should be set to the domain name of your website with a query string.
+# 9. The server_name directive should be set to the domain name of your website with a fragment identifier.
+# 10. The server_name directive should be set to the domain name of your website with a username and password.
+
+# Qestion & Answer:
+# Q: What is the server_name directive?
+# A: The server_name directive is used to specify the domain name of your website.
+# Q: what should set to the server_name to connect to backend container  VPS virtual private server?
+# 
+
+

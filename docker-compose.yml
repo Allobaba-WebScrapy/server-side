@@ -1,0 +1,81 @@
+version: '3.7'
+services:
+
+  router:
+    image: jonasal/nginx-certbot:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "80:80" # HTTP traffic
+      - "443:443" # HTTPS traffic
+    volumes:
+
+      # --- NGINX SSL ---
+      - nginxssl:/etc/letsencrypt
+
+      # --- NGINX CONFIG ---
+      - ./router/:/etc/nginx/conf.d/
+      - ./router/:/etc/nginx/user_conf.d/
+
+      # --- NGINX LOGS ---
+      - ./logs/nginx:/var/log/nginx
+      - ./logs/ssl:/var/log/letsencrypt
+
+    networks:
+      - scrapy-network
+
+  autoscout24:
+    build:
+      context: ./autoscout24
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "4010:3000"
+    depends_on:
+      - router
+    networks:
+      - scrapy-network
+
+  orange:
+    build:
+      context: ./orange
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "4020:4933"
+    depends_on:
+      - router
+    networks:
+      - scrapy-network
+
+  pagesjaunes:
+    build:
+      context: ./pagesjaunes
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "4030:4080"
+    depends_on:
+      - router
+    networks:
+      - scrapy-network
+
+# COMPOSE NETWORKS
+networks:
+  scrapy-network:
+    driver: bridge
+
+# COMPOSE VOLUMES
+volumes:
+  nginxssl:
+
+    # NOTE:
+    # how to use the compose ports  field correctly, ports: ["5000:3000"]
+    # it means that the port 5000 of the host machine will be mapped to the port 3000 of the container

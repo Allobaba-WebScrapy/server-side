@@ -80,11 +80,14 @@ class AutoScout24:
             print('---------------------------------------------')
             print("going to page ",page)
             self.driver.get(page)
+            
             self.driver.implicitly_wait(self.waitingTime)
+            return True
             
         except:
             self.errors.append('We got blocked in going to page {}'.format(page))
             print(self.errors[-1])
+            return False
             
     
     def get_article_url(self,article):
@@ -142,8 +145,18 @@ class AutoScout24:
     def get_article_data(self,url):
         try:
             try:
-                self.change_page_to(url)
-                # title = self.wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'StageTitle_boldClassifiedInfo__sQb0l')))
+                trys = 0
+                isPageChanged = self.change_page_to(url)
+                while not isPageChanged and trys < 3:
+                    isPageChanged = self.change_page_to(url)
+                    time.sleep(3)
+                    trys += 1
+                if not isPageChanged:
+                    print('Error:page not changed')
+                    return {"error":'error/article-data/not-found'}
+                    # return 'error/product/page/not-changed'
+                self.wait.until(EC.presence_of_element_located(by=By.CLASS_NAME,value ="VendorData_mainContainer__qdM_f"))
+                self.wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[2]/div/div/div/main/div[3]/div[2]/div[1]/div[2]/h1/div[1]')))
                 title_div = self.driver.find_element(by=By.XPATH,value="/html/body/div[1]/div[2]/div/div/div/main/div[3]/div[2]/div[1]/div[2]/h1/div[1]")
                 spans = title_div.find_elements(by=By.TAG_NAME,value='span')
                 title = ''
@@ -167,7 +180,6 @@ class AutoScout24:
             print('-- model : ',model)
 
             try:
-                # self.wait.until(EC.presence_of_element_located(by=By.XPATH,value = '//*[@id="vendor-section-call-button"]'))
                 info_card = self.driver.find_element(by=By.CLASS_NAME,value ="VendorData_mainContainer__qdM_f")
             except Exception as e:
                 print('Error:info card not found')
